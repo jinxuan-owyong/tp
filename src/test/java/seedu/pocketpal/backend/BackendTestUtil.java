@@ -47,7 +47,7 @@ public abstract class BackendTestUtil {
     }
 
     public static boolean isSameEntry(Entry entry1, Entry entry2) {
-        return entry1.serialise().equals(entry2.serialise());
+        return entry1.equals(entry2);
     }
 
     public static boolean isSameEntryLog(EntryLog entryLog1, EntryLog entryLog2) {

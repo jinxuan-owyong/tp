@@ -6,6 +6,7 @@ import seedu.pocketpal.data.entry.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,6 +67,19 @@ public class EntryLogTest extends EntryTestUtil {
         @Test
         void getEntry_idMoreThanSize_returnsNull() {
             assertNull(entryLog.getEntry(entryLog.getSize() + 10));
+        }
+
+        @Test
+        void getEntryByUuid_invalidUuid_returnsNull() {
+            assertNull(entryLog.getEntryByUUID(UUID.randomUUID()));
+        }
+
+        @Test
+        void getEntryByUuid_validUuid_sameEntry() {
+            Entry expectedEntry = new Entry("mango", 0.01, Category.FOOD);
+            entryLog.addEntry(expectedEntry);
+            Entry retrievedEntry = entryLog.getEntryByUUID(expectedEntry.getUuid());
+            assertEquals(retrievedEntry, expectedEntry);
         }
 
         @Test

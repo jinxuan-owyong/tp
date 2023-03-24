@@ -6,6 +6,7 @@ import seedu.pocketpal.frontend.constants.EntryConstants;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 /**
  * Represents an entry, from which various possible entry types
@@ -17,7 +18,8 @@ public class Entry implements Serialisable {
     private Category category;
     private String description;
     private double amount;
-    private String dateTime;
+    private final String dateTime;
+    private final UUID uuid;
 
     public Entry(String description, double amount, Category category) {
         assert amount >= 0 : "Entry amount must be non-negative!";
@@ -28,6 +30,7 @@ public class Entry implements Serialisable {
         this.category = category;
         LocalDateTime dateTime = LocalDateTime.now();
         this.dateTime = dateTime.format(DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm:ss"));
+        this.uuid = UUID.randomUUID();
     }
 
     public double getAmount() {
@@ -71,6 +74,10 @@ public class Entry implements Serialisable {
         return description;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
     public void setAmount(double amount) {
         assert amount >= 0 : "Entry amount must be non-negative!";
         this.amount = amount;
@@ -89,5 +96,18 @@ public class Entry implements Serialisable {
     @Override
     public String serialise() {
         return EntryParser.serialise(this);
+    }
+
+    /**
+     * Compare to another entry. Result is independent of UUID.
+     * @param entry Entry to compare
+     * @return true if both entry is the same as this, false otherwise
+     */
+    public boolean equals(Entry entry) {
+        boolean isSameAmount = amount == entry.getAmount();
+        boolean isSameCategory = category == entry.getCategory();
+        boolean isSameDescription = description.equals(entry.getDescription());
+        boolean isSameDateTime = dateTime.compareTo(entry.getDateTime()) == 0;
+        return isSameAmount && isSameCategory && isSameDescription && isSameDateTime;
     }
 }

@@ -31,10 +31,10 @@ public class EntriesEndpointTest extends EntryTestUtil {
         @Test
         void entriesEndpointGET_numEntries_correctNumber() {
             addEntry(ENTRY_1);
-            addEntry(ENTRY_1);
-            addEntry(ENTRY_1);
-            addEntry(ENTRY_1);
-            addEntry(ENTRY_1);
+            addEntry(ENTRY_2);
+            addEntry(ENTRY_3);
+            addEntry(ENTRY_4);
+            addEntry(ENTRY_5);
 
             Request request = new Request(RequestMethod.GET, "");
             request.addParam(RequestParams.GET_SIZE, String.valueOf(true));

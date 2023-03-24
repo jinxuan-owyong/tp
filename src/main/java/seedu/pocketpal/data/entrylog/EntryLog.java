@@ -7,6 +7,7 @@ import seedu.pocketpal.data.parsing.EntryLogParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -33,6 +34,7 @@ public class EntryLog implements Serialisable {
      */
     public void addEntry(Entry entry) {
         assert entry != null : "Entry cannot be null when adding to EntryLog";
+        assert getEntryByUUID(entry.getUuid()) == null : "attempting to add duplicate entry!";
         logger.info("Adding entry: " + entry.getDescription());
         entries.add(entry);
     }
@@ -140,7 +142,7 @@ public class EntryLog implements Serialisable {
     /**
      * This method is called in execute method to improve code readability.
      *
-     * @param  numEntries The number of recent entries to view
+     * @param numEntries The number of recent entries to view
      * @return trimmed list containing the latest "N" number of entries, where N is specified in the view command
      */
     public EntryLog getLatestEntries(int numEntries) {
@@ -149,6 +151,26 @@ public class EntryLog implements Serialisable {
                 : getSize() - numEntries;
         int endIndex = getSize();
         return new EntryLog(entries.subList(startIndex, endIndex));
+    }
+
+    /**
+     * Retrieve an Entry by its UUID.
+     *
+     * @param uuid UUID of expected entry
+     * @return Entry if corresponding UUID exists, null otherwise
+     */
+    public Entry getEntryByUUID(UUID uuid) {
+        assert uuid != null : "unexpected null uuid";
+        logger.info("retrieving entry by uuid: " + uuid);
+        List<Entry> matchingEntries = entries.stream()
+                                             .filter(entry -> entry.getUuid().equals(uuid))
+                                             .collect(Collectors.toList());
+        if (matchingEntries.size() == 0) {
+            logger.info("no matching entries found");
+            return null;
+        }
+        assert matchingEntries.size() == 1 : "more than one entry of the same uuid";
+        return matchingEntries.get(0);
     }
 
     public int getSize() {
